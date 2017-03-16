@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+
+cp -L {,$LOCATION}/etc/resolv.conf
+
+rm -rf $LOCATION/usr/portage
+#git clone https://github.com/gentoo/gentoo.git $LOCATION/usr/portage
+git clone /usr/portage $LOCATION/usr/portage
+
+# remove existing /etc/portage/*/* files which may cause unexpected difference from existing systems?
+mkdir -p $LOCATION/trash/etc
+mv $LOCATION/{,/trash}/etc/portage || true
+
+# deploy slashfiles
+cp -a /.git $LOCATION
+pushd $LOCATION
+git reset origin/master
+git stash
+popd
+
+# deploy files, including world file
+rsync -rpv ./files/ $LOCATION/
+
+# set profile
+ln -snvf ../../usr/portage/profiles/default/linux/amd64/13.0/selinux $LOCATION/etc/portage/make.profile
+
+# temp disable selinux in FEATURES
+echo 'FEATURES="$FEATURES -selinux"' > $LOCATION/etc/portage/make.conf/disable_selinux_features

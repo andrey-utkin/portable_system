@@ -1,0 +1,7 @@
+# install everything
+emerge -e -atv --usepkg --keep-going --with-bdeps=y --binpkg-respect-use=n --binpkg-changed-deps=n @world || true
+emerge -atvuDN --usepkg --keep-going --with-bdeps=y --binpkg-respect-use=n --binpkg-changed-deps=n @world || true
+emerge -a --depclean
+# shouldn't be needed:
+#eselect binutils set 1
+. /etc/profile # binutils update

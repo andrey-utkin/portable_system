@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+MOUNTS=${1-"dev proc sys usr/portage/packages"}
+
+for x in $MOUNTS
+do
+	sudo umount -l $LOCATION/$x
+done
+
+umount $LOCATION/mnt/host
+#umount $LOCATION/mnt/files
+umount $LOCATION/mnt/workcopy

@@ -1,0 +1,7 @@
+# build kernel
+emerge gentoo-sources
+pushd /usr/src/linux
+genkernel --mdadm --luks all
+emerge @module-rebuild
+#make clean
+popd

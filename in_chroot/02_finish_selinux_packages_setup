@@ -1,0 +1,6 @@
+# retry installing
+emerge -1 --usepkg sec-policy/selinux-base-policy
+
+# drop disable of selinux from FEATURES
+rm /etc/portage/make.conf/disable_selinux_features
+emerge -a --usepkg --keep-going @selinux-rebuild

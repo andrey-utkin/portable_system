@@ -1,0 +1,5 @@
+grub-install $(readlink -f /dev/disk/by-label/portable_boot | sed 's/[0-9]//g')
+PREV_HOSTNAME=$(hostname)
+hostname portable
+grub-mkconfig -o /boot/grub/grub.cfg
+hostname $PREV_HOSTNAME

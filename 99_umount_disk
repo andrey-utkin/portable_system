@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+
+umount $LOCATION/boot
+umount $LOCATION
+cryptsetup close portable_rootfs

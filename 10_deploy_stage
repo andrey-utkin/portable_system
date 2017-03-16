@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+
+DISTFILES_DIR='http://distfiles.gentoo.org/releases/amd64/autobuilds'
+STAGE_PATH=`wget $DISTFILES_DIR/latest-stage3-amd64.txt -O - -q | tail -1 | sed 's/ .*//'`
+wget --continue $DISTFILES_DIR/$STAGE_PATH
+if [[ `ls stage*.tar.* | wc -l` != 1 ]]
+then
+	echo "Ensure there's just one stage archive" >&2
+	exit 1
+fi
+
+mkdir -p $LOCATION
+tar xaf stage*.tar.* -C $LOCATION

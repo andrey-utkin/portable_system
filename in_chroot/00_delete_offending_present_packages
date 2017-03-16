@@ -1,0 +1,2 @@
+# remove offending packages
+emerge -C eudev # won't build

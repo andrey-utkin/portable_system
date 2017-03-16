@@ -1,0 +1,18 @@
+# setup user
+useradd -G root,wheel,disk,audio,video,portage,plugdev,lp,lpadmin,cron -m j
+# TODO non-interactive way
+passwd j
+passwd root
+
+chown j.j -R /.git
+
+cp -a {/mnt/host,}/home/j/.git
+pushd /home/j
+git reset --hard origin/master
+popd
+
+cp -a {/mnt/host,}/home/j/.password-store
+cp -a {/mnt/host,}/home/j/.task
+cp -a {/mnt/host,}/home/j/Sync
+#gpg, ssh keys etc.
+chown j.j -R /home/j

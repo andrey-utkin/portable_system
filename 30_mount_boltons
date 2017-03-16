@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+MOUNTS=${1-"dev proc sys usr/portage/packages"}
+
+function cleanup {
+	LOCATION=$LOCATION `dirname $0`/umount "$MOUNTS"
+}
+
+trap cleanup INT TERM QUIT EXIT
+
+for x in $MOUNTS
+do
+	mkdir -p $LOCATION/$x
+	sudo mount --rbind {/,$LOCATION/}$x
+done
+
+if [[ -e /sys/fs/selinux ]]
+then
+	mount --rbind /sys/fs/selinux $LOCATION/sys/fs/selinux
+	mount --bind -o remount,ro $LOCATION/sys/fs/selinux
+fi
+
+mkdir -p $LOCATION/mnt/host
+mount --bind / $LOCATION/mnt/host
+
+#mkdir -p $LOCATION/mnt/files
+#mount --bind $(dirname $0)/files $LOCATION/mnt/files
+
+mkdir -p $LOCATION/mnt/workcopy
+mount --bind $(dirname $0) $LOCATION/mnt/workcopy
+
+trap - INT TERM QUIT EXIT

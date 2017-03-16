@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+set -x
+
+LOCATION=${LOCATION-"gentoo"}
+
+chroot $LOCATION /mnt/workcopy/in_chroot.sh

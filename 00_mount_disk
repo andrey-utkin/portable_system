@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+set -x
+
+mkdir -p gentoo
+
+MAPPED_NAME="portable_rootfs"
+
+if ! [[ -e /dev/mapper/$MAPPED_NAME ]]
+then
+	cryptsetup luksOpen /dev/disk/by-uuid/a9a5aa94-c8ba-45fc-b1ce-5fb10e159eb5 $MAPPED_NAME
+fi
+mount /dev/mapper/$MAPPED_NAME gentoo
+mkdir -p gentoo/boot
+mount /dev/disk/by-label/portable_boot gentoo/boot
