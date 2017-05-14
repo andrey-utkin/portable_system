@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+set -x
+
+# SELinux shit doesn't work on Python 3
+eselect python set python2.7
+
+# Set up SELinux stuff
+# doesn't work as expected in chroot
+# run on deployed system
+# Make user capable of admin tasks
+semanage login -a -s staff_u j
+restorecon -R -F /home/j
+semanage user -m -R "staff_r sysadm_r system_r" root
+semanage user -m -R "staff_r sysadm_r system_r" staff_u
+# Set right contexts over whole rootfs
+rlpkg -avr
