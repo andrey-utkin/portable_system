@@ -10,22 +10,16 @@ rm -rf $LOCATION/usr/portage
 #git clone https://github.com/gentoo/gentoo.git $LOCATION/usr/portage
 git clone /usr/portage $LOCATION/usr/portage
 
-# remove existing /etc/portage/*/* files which may cause unexpected difference from existing systems?
-mkdir -p $LOCATION/trash/etc
-mv $LOCATION/{,/trash}/etc/portage || true
+if ! ( equery list app-emulation/qemu && \
+	[[ `equery uses app-emulation/qemu | egrep '[+](static-user|qemu_user_targets_arm)' | wc -l` == 2 ]] )
+then
+	echo "emerge app-emulation/qemu with USE flags static-user and qemu_user_targets_arm enabled"
+	exit 1
+fi
 
-# deploy slashfiles
-cp -a /.git $LOCATION
-pushd $LOCATION
-git reset origin/master
-git stash
-popd
+cp {,$LOCATION}/usr/bin/qemu-arm
 
-# deploy files, including world file
-rsync -rpv ./files/ $LOCATION/
+service qemu-binfmt start
 
 # set profile
-ln -snvf ../../usr/portage/profiles/default/linux/amd64/13.0/selinux $LOCATION/etc/portage/make.profile
-
-# temp disable selinux in FEATURES
-echo 'FEATURES="$FEATURES -selinux"' > $LOCATION/etc/portage/make.conf/disable_selinux_features
+ln -snvf ../../usr/portage/profiles/default/linux/arm/13.0/armv7a $LOCATION/etc/portage/make.profile

@@ -4,8 +4,8 @@ set -x
 
 LOCATION=${LOCATION-"gentoo"}
 
-DISTFILES_DIR='http://distfiles.gentoo.org/releases/amd64/autobuilds'
-STAGE_PATH=`wget $DISTFILES_DIR/latest-stage3-amd64.txt -O - -q | tail -1 | sed 's/ .*//'`
+DISTFILES_DIR='http://distfiles.gentoo.org/releases/arm/autobuilds'
+STAGE_PATH=`wget $DISTFILES_DIR/latest-stage3-armv7a_hardfp.txt -O - -q | tail -1 | sed 's/ .*//'`
 wget --continue $DISTFILES_DIR/$STAGE_PATH
 if [[ `ls stage*.tar.* | wc -l` != 1 ]]
 then
